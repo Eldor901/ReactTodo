@@ -1,42 +1,58 @@
-import React, {Component} from 'react';
-import * as uuid from "uuid";
-import TodoList from "./components/TodoList";
+import React, { Component } from "react";
+import * as  uuid   from "uuid";
+import "bootstrap/dist/css/bootstrap.min.css";
 import TodoInput from "./components/TodoInput";
-
-export default class App extends Component {
+import TodoList from "./components/TodoList";
+class App extends Component {
     state = {
-        items:[
-            {id:1, title: "wake up"},
-            {id:1, title: "make breakfast"}
-        ],
+        items: [],
         id: uuid.v4(),
         item: "",
-        editItem: false,
+        editItem: false
     };
-
-    handleChange = (e) =>
-    {
-        console.log("handlechange");
+    handleChange = e => {
+        this.setState({
+            item: e.target.value
+        });
     };
+    handleSubmit = e => {
+        e.preventDefault();
+        const newItem = {
+            id: this.state.id,
+            title: this.state.item
+        };
+        const updatedItems = [...this.state.items, newItem];
 
-    handleSubmit = (e) =>
-    {
-        console.log("Submit");
+        this.setState({
+            items: updatedItems,
+            item: "",
+            id: uuid.v4(),
+            editItem: false
+        });
     };
-
-
-    clearList = () =>
-    {
-        console.log("clear List");
+    clearList = () => {
+        this.setState({
+            items: []
+        });
     };
-
-    handleEdit = (id) =>
-    {
-        console.log(`handle edit ${id}`);
+    handleDelete = id => {
+        const filteredItems = this.state.items.filter(item => item.id !== id);
+        this.setState({
+            items: filteredItems
+        });
     };
-
+    handleEdit = id => {
+        const filteredItems = this.state.items.filter(item => item.id !== id);
+        const selectedItem = this.state.items.find(item => item.id === id);
+        this.setState({
+                items: filteredItems,
+                item: selectedItem.title,
+                id: id,
+                editItem: true
+            }
+        )
+    };
     render() {
-        console.log(this.state);
         return (
             <div className="container">
                 <div className="row">
@@ -61,3 +77,4 @@ export default class App extends Component {
     }
 }
 
+export default App;
